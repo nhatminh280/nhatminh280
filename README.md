@@ -1,22 +1,20 @@
 <h1 align="center">Hi 👋, I'm Nhat Minh</h1>
-<h3 align="center">I am currently studying in Posts and Telecommunications Institute of Technology</h3>
+<h3 align="center">I am currently studying in Posts and Telecommunications Institute of Technology.</h3>
+<h3> I currently focus on a intership position.</h3>
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=nhatminh280&label=Profile%20views&color=0e75b6&style=flat" alt="nhatminh280" /> </p>
 
-<p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=nhatminh280" alt="nhatminh280" /></a> </p>
-
-- 🌱 I’m currently learning **Spark,Machine Learning,Data Analytics**
+- I’m currently learning **Spark,Machine Learning,Data Analytics**
 
 - 📫 How to reach me **minh2508tv@gmail.com**
 
-- ⚡ Fun fact **Cat==Frog !**
+- ⚡ **Cat = Frog**
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
-<a href="https://dev.to/m_griffe" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/devto.svg" alt="m_griffe" height="30" width="40" /></a>
 <a href="https://linkedin.com/in/lâm minh" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="lâm minh" height="30" width="40" /></a>
 <a href="https://fb.com/nhật minh" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="nhật minh" height="30" width="40" /></a>
-<a href="https://codeforces.com/profile/m_giraffe" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/codeforces.svg" alt="m_giraffe" height="30" width="40" /></a>
+<a href="https://codeforces.com/profile/m-giraffe" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/codeforces.svg" alt="m-giraffe" height="30" width="40" /></a>
 </p>
 
 <h3 align="left">Languages and Tools:</h3>
