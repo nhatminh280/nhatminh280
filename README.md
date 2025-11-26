@@ -1,4 +1,4 @@
-<h1 align="center">Hi 👋, I'm Nhat Minh</h1>
+<h1 align="center">Hi , I'm Nhat Minh</h1>
 <h3 align="center">I am currently studying in Posts and Telecommunications Institute of Technology.</h3>
     <h3 align ="center"> I currently focus on a intership position.</h3>
 
@@ -6,9 +6,9 @@
 
 - I’m currently learning **Spark,Machine Learning,Data Analytics**
 
-- 📫 How to reach me **minh2508tv@gmail.com**
+-  How to reach me **minh2508tv@gmail.com**
 
-- ⚡ **Cat = Frog**
+-  **Cat = Frog**
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
