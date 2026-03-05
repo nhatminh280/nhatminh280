@@ -4,7 +4,7 @@
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=nhatminh280&label=Profile%20views&color=0e75b6&style=flat" alt="nhatminh280" /> </p>
 
-- I’m currently learning **Spark,Machine Learning,Data Analytics**
+- I’m currently learning **Machine Learning, Deeplearning , RAG systems, NLP , Computer Vision  **
 
 -  How to reach me **minh2508tv@gmail.com**
 
