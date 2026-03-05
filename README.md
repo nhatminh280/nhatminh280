@@ -1,6 +1,6 @@
 <h1 align="center">Hi , I'm Nhat Minh</h1>
 <h3 align="center">I am currently studying in Posts and Telecommunications Institute of Technology.</h3>
-    <h3 align ="center"> I currently focus on a intership position.</h3>
+    <h3 align ="center"> AI-oriented Developer , currently seeking an internship opportunity to learn, grow, and advance my expertise in artificial intelligence.</h3>
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=nhatminh280&label=Profile%20views&color=0e75b6&style=flat" alt="nhatminh280" /> </p>
 
