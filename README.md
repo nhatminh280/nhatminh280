@@ -4,17 +4,14 @@
 
 <h4 align="center">Currently seeking an internship to learn, grow, and advance my expertise in Artificial Intelligence</h4>
 
-<p align="center">
-  <img src="https://komarev.com/ghpvc/?username=nhatminh280&label=Profile%20views&color=0e75b6&style=flat" alt="Profile views" />
-</p>
 
 ---
 
-## 🚀 About Me
+##  About Me
 
-- 🌱 Currently learning **Machine Learning, Deep Learning, RAG Systems, NLP & Computer Vision**
-- 💡 Fun fact: **Cat = Frog** 🐸
-- 📫 Reach me at: **minh2508tv@gmail.com**
+-  Currently learning **Machine Learning, Deep Learning, RAG Systems, NLP & Computer Vision**
+-  Fun fact: **Cat = Frog** 🐸
+-  Reach me at: **minh2508tv@gmail.com**
 
 ---
 
@@ -45,7 +42,7 @@
 </table>
 ---
 
-## 🛠️ Languages & Tools
+##  Languages & Tools
 
 <table align="center">
   <tr>
@@ -162,7 +159,7 @@
 
 ---
 
-## 📊 GitHub Stats
+##  GitHub Stats
 
 <p align="center">
   <img src="https://github-readme-stats.vercel.app/api/top-langs?username=nhatminh280&show_icons=true&locale=en&layout=compact&theme=default" alt="Top Languages" />
