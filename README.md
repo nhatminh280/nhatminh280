@@ -18,22 +18,31 @@
 
 ---
 
+
 ## 🔗 Connect with Me
 
-<p align="center">
-  <a href="https://www.linkedin.com/in/l%C3%A2m-minh" target="_blank" rel="noreferrer">
-    <img src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="LinkedIn" width="40" height="40"/>
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://www.facebook.com/nhat.minh" target="_blank" rel="noreferrer">
-    <img src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="Facebook" width="40" height="40"/>
-  </a>
-  &nbsp;&nbsp;
-  <a href="https://codeforces.com/profile/m-giraffe" target="_blank" rel="noreferrer">
-    <img src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/codeforces.svg" alt="Codeforces" width="40" height="40"/>
-  </a>
-</p>
-
+<table align="center">
+  <tr>
+    <td align="center" width="90">
+      <a href="https://www.linkedin.com/in/l%C3%A2m-minh" target="_blank" rel="noreferrer">
+        <img src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="LinkedIn" width="40" height="40"/>
+      </a>
+      <br>LinkedIn
+    </td>
+    <td align="center" width="90">
+      <a href="https://www.facebook.com/nhat.minh" target="_blank" rel="noreferrer">
+        <img src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/facebook.svg" alt="Facebook" width="40" height="40"/>
+      </a>
+      <br>Facebook
+    </td>
+    <td align="center" width="90">
+      <a href="https://codeforces.com/profile/m-giraffe" target="_blank" rel="noreferrer">
+        <img src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/codeforces.svg" alt="Codeforces" width="40" height="40"/>
+      </a>
+      <br>Codeforces
+    </td>
+  </tr>
+</table>
 ---
 
 ## 🛠️ Languages & Tools
