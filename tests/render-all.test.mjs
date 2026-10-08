@@ -4,7 +4,7 @@ import { assertWellFormed } from './helpers/xml.mjs';
 import { config } from '../scripts/config.mjs';
 import { renderAll } from '../scripts/lib/render-all.mjs';
 import { esc } from '../scripts/lib/format.mjs';
-import { THEMES } from '../scripts/lib/theme.mjs';
+import { THEMES, langColor } from '../scripts/lib/theme.mjs';
 
 const data = {
   figures: { repos: 17, commits: 254, followers: 8, years: 4, activeDays: 112, languageCount: 9 },
@@ -65,4 +65,14 @@ test('theme colours are all blue-family in both modes', () => {
     }
   }
   assert.notEqual(new Set(['accent', 'accent2', 'accent3'].map((k) => THEMES.dark[k])).size, 1, 'three distinct blues');
+});
+
+test('language colours are blue too, and still tell the main languages apart', () => {
+  const names = ['Python', 'C++', 'Jupyter Notebook', 'JavaScript', 'TypeScript', 'Java', 'Shell', 'HTML', 'Other', 'Brainfuck'];
+  for (const n of names) {
+    const h = hue(langColor(n));
+    assert.ok(h !== null && h >= 190 && h <= 260, `${n} ${langColor(n)} has hue ${h}`);
+  }
+  const main = ['Python', 'C++', 'Jupyter Notebook', 'JavaScript'].map(langColor);
+  assert.equal(new Set(main).size, main.length, 'main languages keep distinct colours');
 });

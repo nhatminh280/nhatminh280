@@ -9,8 +9,10 @@ export const THEMES = {
   dark:  { bg: '#070f23', card: '#0b1730', ink: '#e6efff', muted: '#8fa6d0', line: '#1b2d52', accent: '#6f93ff', accent2: '#38b6ff', accent3: '#8f94ff', glow: 0.36, cyan: '#4fd0ee' },
 };
 
+// Blues only, spread across lightness and a little hue so neighbouring segments of the language bar stay readable.
+// Names carry the identity; the legend always prints them.
 const LANG_COLORS = {
-  Python: '#3572a5', 'C++': '#f34b7d', TypeScript: '#3178c6', Java: '#b07219', JavaScript: '#f1e05a',
-  'Jupyter Notebook': '#da5b0b', Shell: '#89e051', HTML: '#e34c26', Other: '#8a94a6',
+  'Jupyter Notebook': '#1d4ed8', Python: '#3b82f6', 'C++': '#6a6df0', JavaScript: '#4fb4f0', TypeScript: '#2a8be8',
+  Java: '#5b6fd8', Shell: '#8aa6ff', HTML: '#2fa3d8', Other: '#8a9bbd',
 };
-export const langColor = (name) => LANG_COLORS[name] ?? '#8a94a6';
+export const langColor = (name) => LANG_COLORS[name] ?? '#8a9bbd';
