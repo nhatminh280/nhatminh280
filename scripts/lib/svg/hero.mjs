@@ -4,7 +4,7 @@ import { auroraDefs, auroraLayer, AURORA_CSS } from './aurora.mjs';
 
 // Hero art: a retrieval-augmented answer, filmed in three scenes. A question arrives, its point lands in a map
 // of embeddings, the nearest items light up, stages are narrated, and the answer streams out token by token.
-// Scenes cycle on one clock (the work behind e-shop, the news assistant and the sign-language classifier).
+// Scenes cycle on one clock (the work behind e-shop, the news assistant and Heartify).
 // Layers drift at different speeds for depth. Everything is a pure function of its inputs and CSS-only, so it
 // animates inside GitHub's <img> sandbox and asset diffs stay meaningful. It is an illustration, not live
 // inference; the caption says so.
@@ -17,7 +17,7 @@ const SIZE = 12;
 const CLUSTERS = [
   { key: 'products', label: 'products', c: [500, 222], r: 44, color: 'accent' },
   { key: 'articles', label: 'articles', c: [622, 180], r: 40, color: 'accent2' },
-  { key: 'frames', label: 'video frames', c: [588, 304], r: 38, color: 'accent3' },
+  { key: 'guides', label: 'health guides', c: [588, 304], r: 38, color: 'accent3' },
 ];
 
 const SCENES = [
@@ -27,9 +27,9 @@ const SCENES = [
   { cls: 'scn-b', cluster: 1, query: 'what changed in AI this week', q: [628, 172],
     stages: ['retrieving', 'reranking', 'generating'], found: 'chunks retrieved',
     answer: 'Found 3 matching articles, grouped by topic for the weekly report.' },
-  { cls: 'scn-c', cluster: 2, query: 'which sign is in this clip?', q: [582, 310],
-    stages: ['embedding frames', 'matching examples', 'classifying'], found: 'nearest examples',
-    answer: 'Closest to one of 100 sign classes, judged from the frame features.' },
+  { cls: 'scn-c', cluster: 2, query: 'healthy dinner for my report', q: [582, 310],
+    stages: ['reading report', 'retrieving', 'generating'], found: 'chunks retrieved',
+    answer: 'Matched the report metrics with food and exercise guidance.' },
 ];
 const CYCLE = SCENE * SCENES.length;
 

@@ -178,7 +178,7 @@ test('hero is a three-scene cinematic banner with layered CSS motion', () => {
   for (const layer of ['grid', 'stars', 'pan']) assert.ok(svg.includes(`class="${layer}`), `${layer} layer`);
   assert.ok((svg.match(/class="dot"/g) || []).length >= 60, 'three embedding clusters');
   assert.equal((svg.match(/class="hit-line draw/g) || []).length, 12, 'four retrieved neighbours per scene');
-  for (const l of ['products', 'articles', 'video frames']) assert.ok(svg.includes(`>${l}<`), `cluster label ${l}`);
+  for (const l of ['products', 'articles', 'health guides']) assert.ok(svg.includes(`>${l}<`), `cluster label ${l}`);
   assert.ok(svg.includes('illustrative, not live inference'), 'honest caption');
 });
 
@@ -207,11 +207,19 @@ test('the full focus line is shown, not cut with an ellipsis', () => {
   assert.ok(heroSVG(hero, THEMES.light).includes('LLM &amp; RAG, computer vision, ML on small devices'));
 });
 
+test('the third scene is Heartify, and nothing in the hero mentions video or sign language any more', () => {
+  const svg = heroSVG(hero, THEMES.light);
+  assert.ok(svg.includes('>healthy dinner for my report</text>'));
+  for (const w of ['Matched', 'metrics', 'food', 'exercise', 'guidance.']) assert.ok(svg.includes(`>${w}</text>`), `answer word ${w}`);
+  const words = [...svg.matchAll(/>([^<]+)<\/(?:text|title|desc)>/g)].map((m) => m[1]).join(' ');
+  assert.ok(words.length > 200, 'found the visible text');
+  assert.doesNotMatch(words, /\bsigns?\b|video|\bclip\b|classif|frames/i);
+});
+
 test('each scene narrates its stages before the answer streams', () => {
   const svg = heroSVG(hero, THEMES.light);
-  for (const w of ['retrieving', 'reranking', 'generating', 'embedding frames', 'classifying']) assert.ok(svg.includes(`>${w}<`), w);
-  assert.equal((svg.match(/4 chunks retrieved/g) || []).length, 2);
-  assert.equal((svg.match(/4 nearest examples/g) || []).length, 1);
+  for (const w of ['retrieving', 'reranking', 'generating', 'reading report']) assert.ok(svg.includes(`>${w}<`), w);
+  assert.equal((svg.match(/4 chunks retrieved/g) || []).length, 3);
 });
 
 test('hero stays small and inert: size cap, no script, no external reference, reduced motion shows scene A only', () => {
