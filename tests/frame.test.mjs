@@ -33,3 +33,9 @@ test('both themes define every colour key and langColor falls back', () => {
   assert.match(langColor('Python'), /^#/);
   assert.match(langColor('Brainf*ck'), /^#/);
 });
+
+test('assertWellFormed rejects a duplicate attribute, which browsers treat as a broken image', async () => {
+  const { assertWellFormed } = await import('./helpers/xml.mjs');
+  assert.throws(() => assertWellFormed('<svg><rect fill="a" stroke="b" stroke="c"/></svg>'), /duplicate attribute stroke/);
+  assert.doesNotThrow(() => assertWellFormed('<svg><rect fill="a" stroke="b"/></svg>'));
+});

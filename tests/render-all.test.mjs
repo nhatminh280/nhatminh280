@@ -76,3 +76,19 @@ test('language colours are blue too, and still tell the main languages apart', (
   const main = ['Python', 'C++', 'Jupyter Notebook', 'JavaScript'].map(langColor);
   assert.equal(new Set(main).size, main.length, 'main languages keep distinct colours');
 });
+
+test('featured projects each carry an illustration, and the ESP32 numbers match its README', () => {
+  assert.deepEqual(config.featured.map((f) => f.repo), ['e-shop', 'Intelligent-News-Assistant_RAG', 'detect_actions_using_MPU-ESP32', 'Heart-']);
+  assert.deepEqual(config.featured.map((f) => f.art), ['rerank', 'sources', 'signal', 'heart']);
+  // First table in the repo README (3,223 windows): Clapping 0.89, Fist Making 0.94, Thumb Up 0.88.
+  assert.deepEqual(config.featured[2].gestures, [{ name: 'Clapping', f1: 0.89 }, { name: 'Fist Making', f1: 0.94 }, { name: 'Thumbs Up', f1: 0.88 }]);
+});
+
+test('the Heartify card says only what the repo says: a just-for-fun Python script', () => {
+  const h = config.featured[3];
+  assert.equal(h.title, 'Heartify');
+  assert.match(h.note, /for fun/i);
+  assert.match(h.blurb, /Python/);
+  assert.match(h.blurb, /Ly Tuan/);
+  assert.doesNotMatch(h.blurb, /AI|model|neural|production|users/i);
+});

@@ -8,7 +8,10 @@ export function assertWellFormed(svg) {
   while ((m = re.exec(svg))) {
     if (/[<>]/.test(svg.slice(last, m.index))) throw new Error(`stray angle bracket before index ${m.index}`);
     last = re.lastIndex;
-    const [, close, name, , self] = m;
+    const [, close, name, attrs, self] = m;
+    const names = [...attrs.matchAll(/\s([\w:.-]+)=/g)].map((a) => a[1]);
+    const dup = names.find((n, i) => names.indexOf(n) !== i);
+    if (dup) throw new Error(`duplicate attribute ${dup} on <${name}> (browsers reject the whole file)`);
     if (self) continue;
     if (close) {
       const open = stack.pop();

@@ -76,6 +76,77 @@ test('project blurb is at most three lines', () => {
   assert.ok(!svg.includes('y="153"'), 'a fourth blurb line would collide with the language row');
 });
 
+const gestures = [{ name: 'Clapping', f1: 0.89 }, { name: 'Fist Making', f1: 0.94 }, { name: 'Thumbs Up', f1: 0.88 }];
+const ARTS = ['rerank', 'sources', 'signal', 'heart'];
+
+test('a project card with art is a taller glass card with a looping illustration, in every theme', () => {
+  for (const th of Object.values(THEMES)) for (const art of ARTS) {
+    const svg = projectSVG({ ...proj, art, gestures }, th);
+    assertWellFormed(svg);
+    assert.ok(svg.includes('height="300"'), `${art} card height`);
+    assert.ok(svg.includes('class="art"'), `${art} has an art group`);
+    assert.ok(svg.includes('@keyframes'), `${art} animates`);
+    assert.ok(svg.includes('>illustration</text>'), `${art} says it is an illustration`);
+    assert.doesNotMatch(svg, /<script|<filter|href=|url\((?!#)|@import/, `${art} stays inert`);
+    assert.ok(svg.length < 24000, `${art} is ${svg.length} bytes`);
+    assert.match(svg, /@media \(prefers-reduced-motion: reduce\)\{[^]*animation:none/, `${art} reduced motion`);
+    assert.equal((svg.match(/class="aur /g) || []).length, 3, `${art} shares the aurora`);
+  }
+});
+
+test('a project card without art keeps the compact layout', () => {
+  const svg = projectSVG(proj, THEMES.light);
+  assert.ok(svg.includes('height="184"'));
+  assert.ok(!svg.includes('class="art"'));
+});
+
+test('art cards keep text below the illustration and the blurb at three lines', () => {
+  const svg = projectSVG({ ...proj, art: 'rerank', blurb: 'word '.repeat(200) }, THEMES.light);
+  assert.ok(svg.includes('y="154"'), 'title below the art band');
+  for (const y of [212, 231, 250]) assert.ok(svg.includes(`y="${y}"`), `blurb line y=${y}`);
+  assert.ok(!svg.includes('y="269"'), 'a fourth blurb line would hit the languages row');
+});
+
+test('rerank: four products slide into relevance order and the winner is outlined', () => {
+  const svg = projectSVG({ ...proj, art: 'rerank' }, THEMES.dark);
+  assert.equal((svg.match(/class="row"/g) || []).length, 4);
+  for (const n of ['pour-over set', 'grinder', 'mug', 'kettle', 'gift under $50']) assert.ok(svg.includes(`>${n}</text>`), n);
+  assert.ok(svg.includes('class="best"'));
+});
+
+test('sources: feeds flow through a topic filter into a vector store and a weekly report', () => {
+  const svg = projectSVG({ ...proj, art: 'sources' }, THEMES.dark);
+  assert.ok((svg.match(/class="pt /g) || []).length >= 6, 'particles on three lanes');
+  for (const n of ['topic filter', 'chromadb', 'weekly report']) assert.ok(svg.includes(`>${n}</text>`), n);
+  assert.equal((svg.match(/class="wr"/g) || []).length, 4, 'four report lines are written');
+});
+
+test('signal: three gesture scenes, with the real names and F1 from the repo, and one scene under reduced motion', () => {
+  const svg = projectSVG({ ...proj, art: 'signal', gestures }, THEMES.dark);
+  assert.equal((svg.match(/<polyline/g) || []).length, 9, 'three axes per gesture');
+  for (const g of gestures) { assert.ok(svg.includes(`>${g.name}</text>`), g.name); assert.ok(svg.includes(`>F1 ${g.f1.toFixed(2)}</text>`), `F1 ${g.f1}`); }
+  assert.ok(svg.includes('stroke-dasharray'), 'bracketed window');
+  assert.match(svg, /\.sc2\{display:none\}/);
+  assert.match(svg, /\.sc3\{display:none\}/);
+});
+
+test('signal without gesture data draws nothing misleading', () => {
+  const svg = projectSVG({ ...proj, art: 'signal' }, THEMES.dark);
+  assertWellFormed(svg);
+  assert.equal((svg.match(/<polyline/g) || []).length, 3, 'one neutral trace set, no names, no scores');
+  assert.ok(!/F1 /.test(svg));
+});
+
+test('heart: a heart traced in dots that beats, with small hearts drifting up, and no claims in the art', () => {
+  const svg = projectSVG({ ...proj, art: 'heart' }, THEMES.dark);
+  assertWellFormed(svg);
+  assert.ok((svg.match(/class="hd"/g) || []).length >= 48, 'the outline is dots');
+  assert.equal((svg.match(/class="beat"/g) || []).length, 1);
+  assert.equal((svg.match(/class="float"/g) || []).length, 3);
+  const art = svg.slice(svg.indexOf('<g class="art">'), svg.lastIndexOf('<text', svg.indexOf('>illustration<')));
+  assert.ok(art.length > 500 && !art.includes('<text'), 'no words inside the art');
+});
+
 const hero = { meta: '@nhatminh280, PTIT, Vietnam', name: 'Nhat Minh', role: 'AI Engineer', status: 'Open to opportunities as an AI Engineer', focus: 'LLM & RAG, computer vision, ML on small devices' };
 
 test('hero renders name, role, status in both themes', () => {
