@@ -1,5 +1,6 @@
 import { textWidth, truncate } from '../format.mjs';
 import { svgDoc, cardRect, text } from './frame.mjs';
+import { auroraDefs, auroraLayer, AURORA_CSS } from './aurora.mjs';
 
 // Hero art: a retrieval-augmented answer, filmed in three scenes. A question arrives, its point lands in a map
 // of embeddings, the nearest items light up, stages are narrated, and the answer streams out token by token.
@@ -82,7 +83,7 @@ function css(th) {
     + `.ring{transform-box:fill-box;transform-origin:center;animation:ring 2.4s ease-out infinite}`
     + `.blink{animation:blink 1s steps(1) infinite}`
     + `.pulse{animation:pulse 2.6s ease-in-out infinite}`
-    + `.aur{animation:aur 24s ease-in-out infinite alternate;animation-delay:var(--d)}`
+    + AURORA_CSS
     + `.grid{animation:grid 40s linear infinite}`
     + `.stars{animation:stars 26s ease-in-out infinite alternate}`
     + `.pan{animation:pan 18s ease-in-out infinite alternate}`
@@ -94,7 +95,6 @@ function css(th) {
     + `@keyframes ring{0%{transform:scale(1);opacity:.7}100%{transform:scale(3.4);opacity:0}}`
     + `@keyframes blink{50%{opacity:0}}`
     + `@keyframes pulse{50%{opacity:.3}}`
-    + `@keyframes aur{from{transform:translate(0,0)}to{transform:translate(var(--x),var(--y))}}`
     + `@keyframes grid{to{transform:translate(-48px,-48px)}}`
     + `@keyframes stars{from{transform:translate(-8px,3px)}to{transform:translate(8px,-3px)}}`
     + `@keyframes pan{from{transform:translate(-3px,-2px)}to{transform:translate(3px,2px)}}`
@@ -104,13 +104,14 @@ function css(th) {
 
 // Quiet backdrop: coordinate grid (drifts one cell per loop) and a few far-off points (drift the other way).
 function backdrop(th) {
-  const glow = (id, color) => `<radialGradient id="${id}"><stop offset="0" stop-color="${color}" stop-opacity="${th.glow}"/><stop offset="0.55" stop-color="${color}" stop-opacity="${f(th.glow * 0.35)}"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></radialGradient>`;
-  let g = `<defs>${glow('ga', th.accent)}${glow('gb', th.accent2)}${glow('gc', th.cyan)}<clipPath id="card"><rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="18"/></clipPath>`
+  let g = `<defs>${auroraDefs(th)}<clipPath id="card"><rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="18"/></clipPath>`
     + `<radialGradient id="halo"><stop offset="0" stop-color="${th.accent}" stop-opacity="0.28"/><stop offset="1" stop-color="${th.accent}" stop-opacity="0"/></radialGradient></defs>`;
   g += `<g clip-path="url(#card)">`
-    + `<circle class="aur a1" cx="560" cy="110" r="280" fill="url(#ga)" style="--x:50px;--y:30px;--d:0s"/>`
-    + `<circle class="aur a2" cx="800" cy="340" r="250" fill="url(#gb)" style="--x:-60px;--y:-24px;--d:-9s"/>`
-    + `<circle class="aur a3" cx="170" cy="380" r="260" fill="url(#gc)" style="--x:40px;--y:-34px;--d:-15s"/>`
+    + auroraLayer([
+      { n: 1, cx: 560, cy: 110, r: 280, x: 50, y: 30, d: 0 },
+      { n: 2, cx: 800, cy: 340, r: 250, x: -60, y: -24, d: -9 },
+      { n: 3, cx: 170, cy: 380, r: 260, x: 40, y: -34, d: -15 },
+    ])
     + `<g class="grid" stroke="${th.line}" stroke-opacity="0.55" stroke-width="1">`;
   for (let x = 0; x <= W + 48; x += 48) g += `<line x1="${x}" y1="-48" x2="${x}" y2="${H + 48}"/>`;
   for (let y = 0; y <= H + 48; y += 48) g += `<line x1="-48" y1="${y}" x2="${W + 48}" y2="${y}"/>`;

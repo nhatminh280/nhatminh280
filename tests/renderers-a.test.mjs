@@ -30,6 +30,31 @@ test('activity keeps a genuine zero', () => {
 test('activity throws when there is nothing to show', () =>
   assert.throws(() => activitySVG({}, THEMES.light), /no figures/));
 
+test('activity is one glass tile per figure, each with its own icon, over the shared aurora', () => {
+  for (const th of Object.values(THEMES)) {
+    const svg = activitySVG(figures, th);
+    assert.equal((svg.match(/class="tile rise"/g) || []).length, 6);
+    assert.equal((svg.match(/class="ico"/g) || []).length, 6);
+    assert.equal((svg.match(/class="aur /g) || []).length, 3);
+    assert.doesNotMatch(svg, /<filter|feGaussianBlur|<script|href=|url\((?!#)/);
+    assert.ok(svg.length < 14000, `activity is ${svg.length} bytes`);
+    assert.match(svg, /@media \(prefers-reduced-motion: reduce\)\{[^]*\.rise\{animation:none\}/);
+  }
+});
+
+test('activity tiles reveal once, staggered, and reflow when a figure is missing', () => {
+  const svg = activitySVG(figures, THEMES.dark);
+  assert.match(svg, /\.rise\{animation:rise [0-9.]+s ease-out both;animation-delay:calc\(var\(--i\) \* [0-9.]+s\)\}/);
+  assert.ok(!/infinite/.test(svg.match(/\.rise\{[^}]*\}/)[0]), 'tiles do not loop');
+  const four = activitySVG({ ...figures, commits: null, activeDays: null }, THEMES.dark);
+  assert.equal((four.match(/class="tile rise"/g) || []).length, 4);
+  assertWellFormed(four);
+});
+
+test('activity labels are shown in full', () => {
+  assert.ok(activitySVG(figures, THEMES.light).includes('>active days in 12 months</text>'));
+});
+
 const langs = [
   { name: 'Python', bytes: 700, pct: 70 }, { name: 'C++', bytes: 200, pct: 20 },
   { name: 'Jupyter Notebook', bytes: 60, pct: 6 }, { name: 'Other', bytes: 40, pct: 4 },
