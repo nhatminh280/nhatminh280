@@ -94,3 +94,8 @@ test('the Heartify card is a team repo and says only what its README says', () =
   assert.match(h.blurb, /exercise/i);
   assert.doesNotMatch(h.blurb, /\b(led|built|owned|founded|my)\b/i, 'no role claim beyond the API-derived commit share');
 });
+
+test('badges are staggered in config order', () => {
+  const files = renderAll({ data, config });
+  config.links.forEach((l, i) => assert.ok(files[`badge-${l.id}-dark.svg`].includes(`style="--i:${i}"`), l.id));
+});

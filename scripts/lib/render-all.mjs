@@ -15,7 +15,7 @@ export function renderAll({ data, config }) {
     files[`stack-${key}.svg`] = stackSVG(config.stack, th);
     files[`languages-${key}.svg`] = languagesSVG(data.languages, th);
     data.featured.forEach((p, i) => { files[`project-${i + 1}-${key}.svg`] = projectSVG(p, th); });
-    for (const b of config.links) files[`badge-${b.id}-${key}.svg`] = badgeSVG(b, th);
+    config.links.forEach((b, i) => { files[`badge-${b.id}-${key}.svg`] = badgeSVG(b, th, i); });
   }
   return files;
 }

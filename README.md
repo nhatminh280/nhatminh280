@@ -3,10 +3,10 @@
 </p>
 
 <p align="center">
-<a href="https://www.linkedin.com/in/l%C3%A2m-minh-08b975288/"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/badge-linkedin-dark.svg?v=1791442842"><source media="(prefers-color-scheme: light)" srcset="assets/badge-linkedin-light.svg?v=1791442842"><img alt="LinkedIn" src="assets/badge-linkedin-light.svg?v=1791442842" height="32"></picture></a>
-<a href="https://codeforces.com/profile/m-giraffe"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/badge-codeforces-dark.svg?v=1791442842"><source media="(prefers-color-scheme: light)" srcset="assets/badge-codeforces-light.svg?v=1791442842"><img alt="Codeforces" src="assets/badge-codeforces-light.svg?v=1791442842" height="32"></picture></a>
-<a href="mailto:minh2508tv@gmail.com"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/badge-gmail-dark.svg?v=1791442842"><source media="(prefers-color-scheme: light)" srcset="assets/badge-gmail-light.svg?v=1791442842"><img alt="Email: minh2508tv@gmail.com" src="assets/badge-gmail-light.svg?v=1791442842" height="32"></picture></a>
-<a href="https://github.com/nhatminh280"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/badge-github-dark.svg?v=1791442842"><source media="(prefers-color-scheme: light)" srcset="assets/badge-github-light.svg?v=1791442842"><img alt="GitHub" src="assets/badge-github-light.svg?v=1791442842" height="32"></picture></a>
+<a href="https://www.linkedin.com/in/l%C3%A2m-minh-08b975288/"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/badge-linkedin-dark.svg?v=1791442842"><source media="(prefers-color-scheme: light)" srcset="assets/badge-linkedin-light.svg?v=1791442842"><img alt="LinkedIn" src="assets/badge-linkedin-light.svg?v=1791442842" height="44"></picture></a>
+<a href="https://codeforces.com/profile/m-giraffe"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/badge-codeforces-dark.svg?v=1791442842"><source media="(prefers-color-scheme: light)" srcset="assets/badge-codeforces-light.svg?v=1791442842"><img alt="Codeforces" src="assets/badge-codeforces-light.svg?v=1791442842" height="44"></picture></a>
+<a href="mailto:minh2508tv@gmail.com"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/badge-gmail-dark.svg?v=1791442842"><source media="(prefers-color-scheme: light)" srcset="assets/badge-gmail-light.svg?v=1791442842"><img alt="Email: minh2508tv@gmail.com" src="assets/badge-gmail-light.svg?v=1791442842" height="44"></picture></a>
+<a href="https://github.com/nhatminh280"><picture><source media="(prefers-color-scheme: dark)" srcset="assets/badge-github-dark.svg?v=1791442842"><source media="(prefers-color-scheme: light)" srcset="assets/badge-github-light.svg?v=1791442842"><img alt="GitHub" src="assets/badge-github-light.svg?v=1791442842" height="44"></picture></a>
 </p>
 
 <p align="center">

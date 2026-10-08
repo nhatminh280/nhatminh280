@@ -41,3 +41,9 @@ test('all four project cards link to the featured repos', () => {
     assert.ok(readme.includes(`https://github.com/${r}`), r);
   }
 });
+
+test('the four contact badges are shown at the new height', () => {
+  const imgs = [...readme.matchAll(/<img[^>]*src="assets\/badge-[a-z]+-light\.svg[^>]*>/g)].map((m) => m[0]);
+  assert.equal(imgs.length, 4);
+  for (const img of imgs) assert.match(img, /height="44"/);
+});

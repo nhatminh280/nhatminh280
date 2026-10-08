@@ -88,5 +88,31 @@ test('badge width follows its label and text is escaped', () => {
   assertWellFormed(b);
   const w = (s) => Number(/width="(\d+)"/.exec(s)[1]);
   assert.ok(w(b) > w(a));
-  assert.match(b, /height="32"/);
+  assert.match(b, /height="44"/);
+});
+
+test('badge is a glass pill with a hand-drawn icon per platform, a glow in its own colour, and a one-shot rise', () => {
+  const links = [['linkedin', 'in'], ['codeforces', 'CF'], ['gmail', '@'], ['github', 'GH']];
+  const strokes = new Set();
+  links.forEach(([id, glyph], i) => {
+    for (const th of Object.values(THEMES)) {
+      const svg = badgeSVG({ id, label: id, glyph }, th, i);
+      assertWellFormed(svg);
+      assert.ok(svg.includes('class="badge rise"'));
+      assert.ok(svg.includes(`style="--i:${i}"`), 'stagger index');
+      assert.ok(svg.includes('class="ico"'), `${id} icon`);
+      assert.ok(!svg.includes(`>${glyph}</text>`), `${id} draws an icon, not its monogram`);
+      assert.doesNotMatch(svg, /<filter|feGaussianBlur|<script|href=|url\((?!#)/);
+      assert.ok(svg.length < 3500, `${id} badge is ${svg.length} bytes`);
+      assert.match(svg, /@media \(prefers-reduced-motion: reduce\)\{[^]*\.rise\{animation:none\}/);
+    }
+    strokes.add(badgeSVG({ id, label: id, glyph }, THEMES.dark, i).match(/class="ico"[^>]*stroke="(#[0-9a-f]{6})"/)[1]);
+  });
+  assert.equal(strokes.size, 4, 'each platform has its own tone');
+});
+
+test('a badge for an unknown platform falls back to its monogram', () => {
+  const svg = badgeSVG({ id: 'mastodon', label: 'Mastodon', glyph: 'M' }, THEMES.light);
+  assertWellFormed(svg);
+  assert.ok(svg.includes('>M</text>'));
 });
