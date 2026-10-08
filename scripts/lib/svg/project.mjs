@@ -21,7 +21,12 @@ export function projectSVG(p, th) {
   }
   body += text(pad, 38 + off, truncate(p.title, inner, 17), { size: 17, weight: 700, fill: th.accent, mono: true });
 
-  const pills = [p.fork ? (p.parent ? `Fork of ${p.parent}` : 'Fork') : null, p.note].filter(Boolean);
+  // Provenance comes from the API: forks say where they came from, repos owned by someone else say whose they are
+  // and, when the API reports it, how many of the commits are mine.
+  const external = p.external
+    ? (p.contributions ? `By ${p.ownerLogin}, ${p.contributions.mine} of ${p.contributions.total} commits` : `By ${p.ownerLogin}`)
+    : null;
+  const pills = [p.fork ? (p.parent ? `Fork of ${p.parent}` : 'Fork') : null, external, p.note].filter(Boolean);
   let px = pad;
   for (const label of pills) {
     const t = truncate(label, inner - 24, 11);

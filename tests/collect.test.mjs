@@ -111,3 +111,51 @@ test('repo listing paginates past 100 repos', async () => {
   assert.ok(f.calls.some((u) => u.includes('page=2')));
   assert.ok(d.featured.length === 1);
 });
+
+// A featured repo can belong to someone else (a team or hackathon repo). It is read from its owner, must be public,
+// and the card says whose it is and how much of it is mine, from the API rather than from a claim in the config.
+function foreignRoutes(over = {}) {
+  return [
+    ['/repos/k/h/languages', over.langs ?? { 'Jupyter Notebook': 90, Python: 40, Makefile: 1 }],
+    ['/repos/k/h/contributors', over.contrib ?? [{ login: 'U', contributions: 19 }, { login: 'k', contributions: 1 }]],
+    ['/repos/k/h', over.detail ?? { name: 'h', private: false, fork: false, html_url: 'https://github.com/k/h', owner: { login: 'k' } }],
+    ...routes(),
+  ];
+}
+const foreign = (over) => stubFetch(foreignRoutes(over));
+const runForeign = (f) => collect({ user: 'u', featured: [{ repo: 'h', owner: 'k', title: 'H', blurb: 'b' }], client: createClient({ token: 't', fetchImpl: f }), now: NOW });
+
+test('a featured repo owned by someone else is read from its owner, with my share of the commits', async () => {
+  const c = (await runForeign(foreign())).featured[0];
+  assert.equal(c.url, 'https://github.com/k/h');
+  assert.equal(c.ownerLogin, 'k');
+  assert.equal(c.external, true);
+  assert.deepEqual(c.contributions, { mine: 19, total: 20 });
+  assert.deepEqual(c.languages, ['Jupyter Notebook', 'Python', 'Makefile']);
+});
+
+test('my own featured repos are not marked external', async () => {
+  const c = (await run().p).featured[0];
+  assert.equal(c.external, false);
+  assert.equal(c.ownerLogin, 'u');
+  assert.equal(c.contributions, null);
+});
+
+test('a private or missing foreign repo fails loudly with owner and name', async () => {
+  await assert.rejects(runForeign(foreign({ detail: { name: 'h', private: true, owner: { login: 'k' } } })), /Featured repo not found or not public: k\/h/);
+  const gone = stubFetch([['/repos/k/h', new Response('{}', { status: 404 })], ...routes()]);
+  await assert.rejects(runForeign(gone), /Featured repo not found or not public: k\/h/);
+});
+
+test('contributions are omitted, not guessed, when I am not among the contributors', async () => {
+  const c = (await runForeign(foreign({ contrib: [{ login: 'k', contributions: 5 }] }))).featured[0];
+  assert.equal(c.contributions, null);
+  const empty = (await runForeign(foreign({ contrib: [] }))).featured[0];
+  assert.equal(empty.contributions, null);
+});
+
+test('an empty contributor list (204 No Content) leaves the commit share out instead of crashing the build', async () => {
+  const f = stubFetch([['/repos/k/h/contributors', new Response(null, { status: 204 })], ...foreignRoutes()]);
+  const c = (await runForeign(f)).featured[0];
+  assert.equal(c.contributions, null);
+});

@@ -78,17 +78,19 @@ test('language colours are blue too, and still tell the main languages apart', (
 });
 
 test('featured projects each carry an illustration, and the ESP32 numbers match its README', () => {
-  assert.deepEqual(config.featured.map((f) => f.repo), ['e-shop', 'Intelligent-News-Assistant_RAG', 'detect_actions_using_MPU-ESP32', 'Heart-']);
-  assert.deepEqual(config.featured.map((f) => f.art), ['rerank', 'sources', 'signal', 'heart']);
+  assert.deepEqual(config.featured.map((f) => f.repo), ['e-shop', 'Intelligent-News-Assistant_RAG', 'detect_actions_using_MPU-ESP32', 'heartify-AI']);
+  assert.deepEqual(config.featured.map((f) => f.art), ['rerank', 'sources', 'signal', 'health']);
   // First table in the repo README (3,223 windows): Clapping 0.89, Fist Making 0.94, Thumb Up 0.88.
   assert.deepEqual(config.featured[2].gestures, [{ name: 'Clapping', f1: 0.89 }, { name: 'Fist Making', f1: 0.94 }, { name: 'Thumbs Up', f1: 0.88 }]);
 });
 
-test('the Heartify card says only what the repo says: a just-for-fun Python script', () => {
+test('the Heartify card is a team repo and says only what its README says', () => {
   const h = config.featured[3];
+  assert.equal(h.owner, 'kodomotachi');
   assert.equal(h.title, 'Heartify');
-  assert.match(h.note, /for fun/i);
-  assert.match(h.blurb, /Python/);
-  assert.match(h.blurb, /Ly Tuan/);
-  assert.doesNotMatch(h.blurb, /AI|model|neural|production|users/i);
+  assert.match(h.note, /hackathon/i);
+  assert.match(h.blurb, /OCR/);
+  assert.match(h.blurb, /food/i);
+  assert.match(h.blurb, /exercise/i);
+  assert.doesNotMatch(h.blurb, /\b(led|built|owned|founded|my)\b/i, 'no role claim beyond the API-derived commit share');
 });

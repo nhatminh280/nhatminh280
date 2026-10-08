@@ -28,8 +28,9 @@ export const config = {
       // Per-class F1 from the repo README, first table (3,223 windows).
       gestures: [{ name: 'Clapping', f1: 0.89 }, { name: 'Fist Making', f1: 0.94 }, { name: 'Thumbs Up', f1: 0.88 }],
       blurb: 'Hand gestures recognised in real time by XGBoost on an ESP32 + MPU6050. F1 0.88 to 0.94 per gesture, accuracy 0.90.' },
-    { repo: 'Heart-', title: 'Heartify', note: 'Just for fun', art: 'heart',
-      blurb: 'A small Python script for confessing to your lover, imitating the character Ly Tuan. Made for fun in my free time.' },
+    // Owned by kodomotachi: the card shows whose repo it is and my commit share, both read from the API.
+    { repo: 'heartify-AI', owner: 'kodomotachi', title: 'Heartify', note: 'AI Agents hackathon', art: 'health',
+      blurb: 'AI backend for Heartify: OCR of medical reports, plus food and exercise recommendation with RAG on Pinecone.' },
   ],
 
   links: [

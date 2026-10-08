@@ -77,7 +77,7 @@ test('project blurb is at most three lines', () => {
 });
 
 const gestures = [{ name: 'Clapping', f1: 0.89 }, { name: 'Fist Making', f1: 0.94 }, { name: 'Thumbs Up', f1: 0.88 }];
-const ARTS = ['rerank', 'sources', 'signal', 'heart'];
+const ARTS = ['rerank', 'sources', 'signal', 'health'];
 
 test('a project card with art is a taller glass card with a looping illustration, in every theme', () => {
   for (const th of Object.values(THEMES)) for (const art of ARTS) {
@@ -137,14 +137,25 @@ test('signal without gesture data draws nothing misleading', () => {
   assert.ok(!/F1 /.test(svg));
 });
 
-test('heart: a heart traced in dots that beats, with small hearts drifting up, and no claims in the art', () => {
-  const svg = projectSVG({ ...proj, art: 'heart' }, THEMES.dark);
+test('health: a medical report is scanned, metrics come out, and food and exercise advice is written', () => {
+  const svg = projectSVG({ ...proj, art: 'health' }, THEMES.dark);
   assertWellFormed(svg);
-  assert.ok((svg.match(/class="hd"/g) || []).length >= 48, 'the outline is dots');
-  assert.equal((svg.match(/class="beat"/g) || []).length, 1);
-  assert.equal((svg.match(/class="float"/g) || []).length, 3);
-  const art = svg.slice(svg.indexOf('<g class="art">'), svg.lastIndexOf('<text', svg.indexOf('>illustration<')));
-  assert.ok(art.length > 500 && !art.includes('<text'), 'no words inside the art');
+  assert.equal((svg.match(/class="chip"/g) || []).length, 3, 'three extracted metrics');
+  assert.equal((svg.match(/class="rc"/g) || []).length, 2, 'food and exercise cards');
+  assert.ok((svg.match(/class="sk"/g) || []).length >= 4, 'advice lines are written');
+  assert.ok(svg.includes('class="beam"'), 'a scan beam');
+  for (const n of ['OCR', 'health metrics', 'food rag', 'exercise rag']) assert.ok(svg.includes(`>${n}</text>`), n);
+});
+
+test('a card for a repo owned by someone else says so, with my share of its commits', () => {
+  const ext = { ...proj, fork: false, parent: null, external: true, ownerLogin: 'kodomotachi', contributions: { mine: 19, total: 20 }, note: 'AI Agents hackathon' };
+  const svg = projectSVG(ext, THEMES.light);
+  assertWellFormed(svg);
+  assert.ok(svg.includes('>By kodomotachi, 19 of 20 commits</text>'));
+  assert.ok(svg.includes('>AI Agents hackathon</text>'), 'the note still fits beside it');
+  const bare = projectSVG({ ...ext, contributions: null }, THEMES.light);
+  assert.ok(bare.includes('>By kodomotachi</text>'));
+  assert.ok(!projectSVG({ ...ext, external: false }, THEMES.light).includes('By kodomotachi'));
 });
 
 const hero = { meta: '@nhatminh280, PTIT, Vietnam', name: 'Nhat Minh', role: 'AI Engineer', status: 'Open to opportunities as an AI Engineer', focus: 'LLM & RAG, computer vision, ML on small devices' };

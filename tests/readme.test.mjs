@@ -37,7 +37,7 @@ test('project cards use percentage widths so two fit per row at any column width
 });
 
 test('all four project cards link to the featured repos', () => {
-  for (const r of ['e-shop', 'Intelligent-News-Assistant_RAG', 'detect_actions_using_MPU-ESP32', 'Heart-']) {
-    assert.ok(readme.includes(`https://github.com/nhatminh280/${r}`), r);
+  for (const r of ['nhatminh280/e-shop', 'nhatminh280/Intelligent-News-Assistant_RAG', 'nhatminh280/detect_actions_using_MPU-ESP32', 'kodomotachi/heartify-AI']) {
+    assert.ok(readme.includes(`https://github.com/${r}`), r);
   }
 });

@@ -118,34 +118,40 @@ function signal(th, p) {
   };
 }
 
-// Heartify: a heart traced in dots that beats like a pulse, with small hearts drifting up. No words, no claims:
-// the repo is a just-for-fun Python script, so the art is just for fun too.
-const heartPts = (cx, cy, s, n) => Array.from({ length: n }, (_, i) => {
-  const t = (i / n) * 2 * Math.PI;
-  return [cx + s * 16 * Math.sin(t) ** 3, cy - s * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t))];
-});
-const poly = (pts) => 'M' + pts.map(([x, y]) => `${f(x)} ${f(y)}`).join('L') + 'Z';
-
-function heart(th) {
-  const dots = heartPts(219, 52, 3, 56);
-  const tones = [th.accent, th.accent2, th.cyan];
-  let body = `<g class="beat"><path d="${poly(heartPts(219, 52, 3, 90))}" fill="${th.accent}" fill-opacity="0.14"/>`
-    + dots.map(([x, y], i) => `<circle class="hd" style="--i:${i}" cx="${f(x)}" cy="${f(y)}" r="2.8" fill="${tones[i % 3]}"/>`).join('') + `</g>`;
-  [[112, 92, th.accent2, 0], [334, 74, th.cyan, -1.7], [372, 98, th.accent3, -3.4]].forEach(([x, y, c, d]) => {
-    body += `<path class="float" style="--d:${d}s" d="${poly(heartPts(x, y, 0.55, 28))}" fill="${c}"/>`;
+// Heartify AI: a medical report is scanned by OCR, health metrics come out, and the food and exercise advisers
+// (both RAG) write their recommendations. Wording follows the repo's README; no figures are shown.
+function health(th) {
+  let body = `<rect x="24" y="14" width="64" height="84" rx="6" ${glass(th)}/><rect x="32" y="22" width="28" height="5" rx="2" fill="${th.accent}"/>`;
+  [40, 36, 40, 30, 38].forEach((w, i) => { body += `<rect x="32" y="${36 + i * 10}" width="${w}" height="4" rx="2" fill="${th.line}"/>`; });
+  body += `<rect class="beam" x="28" y="20" width="56" height="2" rx="1" fill="${th.accent2}"/>`
+    + `<line x1="88" y1="57" x2="106" y2="57" stroke="${th.accent}" stroke-opacity="0.55" stroke-width="1.5"/>`
+    + `<rect x="106" y="42" width="44" height="30" rx="6" ${glass(th, th.accent)}/>` + text(128, 61, 'OCR', { ...mono(th), anchor: 'middle' })
+    + `<line x1="150" y1="57" x2="166" y2="57" stroke="${th.accent}" stroke-opacity="0.55" stroke-width="1.5"/>`;
+  [22, 46, 70].forEach((y, i) => {
+    body += `<g class="chip" style="--i:${i}"><rect x="166" y="${y}" width="66" height="18" rx="5" ${glass(th)}/><circle cx="176" cy="${y + 9}" r="3" fill="${th.accent2}"/>`
+      + `<rect x="184" y="${y + 7.5}" width="36" height="3" rx="1.5" fill="${th.muted}" fill-opacity="0.6"/></g>`;
+  });
+  body += text(199, 106, 'health metrics', { ...mono(th, 10, th.muted), anchor: 'middle' });
+  [['food rag', 16, 4], ['exercise rag', 62, 6]].forEach(([label, y, k], ci) => {
+    body += `<path class="lk" pathLength="1" d="M232 55C247 55 247 ${y + 19} 262 ${y + 19}" fill="none" stroke="${th.accent}" stroke-opacity="0.55" stroke-width="1.5"/>`
+      + `<g class="rc" style="--i:${3 + ci}"><rect x="262" y="${y}" width="152" height="38" rx="6" ${glass(th)}/>` + text(272, y + 15, label, mono(th))
+      + `<rect class="sk" style="--i:${k}" x="272" y="${y + 22}" width="100" height="3" rx="1.5" fill="${th.accent2}"/>`
+      + `<rect class="sk" style="--i:${k + 1}" x="272" y="${y + 29}" width="70" height="3" rx="1.5" fill="${th.accent2}" fill-opacity="0.7"/></g>`;
   });
   return {
     body,
-    css: `.hd{animation:trace 6s ease-out infinite both;animation-delay:calc(var(--i) * 0.06s)}`
-      + `.beat{transform-box:fill-box;transform-origin:center;animation:beat 1.6s ease-in-out infinite}`
-      + `.float{opacity:0.5;animation:float 5s ease-in infinite both;animation-delay:var(--d)}`
-      + `@keyframes trace{0%{opacity:0.12}8%,72%{opacity:1}100%{opacity:0.12}}`
-      + `@keyframes beat{0%{transform:scale(1)}12%{transform:scale(1.06)}24%{transform:scale(1)}36%{transform:scale(1.04)}48%,100%{transform:scale(1)}}`
-      + `@keyframes float{0%{opacity:0;transform:translateY(0)}20%{opacity:0.8}100%{opacity:0;transform:translateY(-34px)}}`,
-    reduced: `.hd,.beat,.float{animation:none}`,
+    css: `.beam{opacity:0;animation:beam 9s linear infinite both}`
+      + `.chip,.rc{animation:pop 9s ease-out infinite both;animation-delay:calc(var(--i) * 0.4s)}`
+      + `.lk{stroke-dasharray:1;animation:link 9s ease-out infinite both}`
+      + `.sk{transform-box:fill-box;transform-origin:left center;animation:write 9s ease-out infinite both;animation-delay:calc(var(--i) * 0.4s)}`
+      + `@keyframes beam{0%{transform:translateY(0);opacity:0}3%{opacity:1}30%{transform:translateY(62px);opacity:1}34%,100%{transform:translateY(62px);opacity:0}}`
+      + `@keyframes pop{0%,33%{opacity:0}38%,90%{opacity:1}96%,100%{opacity:0}}`
+      + `@keyframes link{0%,44%{stroke-dashoffset:1}52%,90%{stroke-dashoffset:0}96%,100%{stroke-dashoffset:1}}`
+      + `@keyframes write{0%,40%{transform:scaleX(0)}52%,90%{transform:scaleX(1)}96%,100%{transform:scaleX(0)}}`,
+    reduced: `.beam{animation:none}.chip,.rc,.lk,.sk{animation:none}`,
   };
 }
 
-const ARTS = { rerank, sources, signal, heart };
+const ARTS = { rerank, sources, signal, health };
 export const hasArt = (kind) => Object.hasOwn(ARTS, kind);
 export const projectArt = (kind, th, p) => ARTS[kind](th, p);

@@ -17,6 +17,7 @@ export function createClient({ token = '', fetchImpl = fetch } = {}) {
   async function call(url, init = {}) {
     const res = await fetchImpl(url, { ...init, headers: { ...base, ...(init.headers ?? {}) } });
     if (!res.ok) throw new GitHubError(`${init.method ?? 'GET'} ${url} -> ${res.status}`, res.status);
+    if (res.status === 204) return null; // e.g. contributors of an empty repo: no body to parse
     return res.json();
   }
 

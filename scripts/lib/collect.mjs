@@ -38,6 +38,15 @@ async function fetchActiveDays(client, user, now) {
   return weeks.length ? activeDays(weeks) : null;
 }
 
+// My commits against everyone's, from the contributors list. Null when I am not on it (or the list is empty), so a
+// card never claims a share the API did not report.
+function shareOfCommits(contributors, user) {
+  if (!Array.isArray(contributors) || !contributors.length) return null;
+  const mine = contributors.find((c) => c.login?.toLowerCase() === user.toLowerCase());
+  if (!mine) return null;
+  return { mine: mine.contributions, total: contributors.reduce((n, c) => n + c.contributions, 0) };
+}
+
 export async function collect({ user, featured, client, now = new Date() }) {
   const profile = await client.rest(`/users/${user}`);
   const repos = await listPublicRepos(client, user);
@@ -53,15 +62,38 @@ export async function collect({ user, featured, client, now = new Date() }) {
 
   const featuredOut = [];
   for (const f of featured) {
-    const found = repos.find((r) => r.name === f.repo);
-    if (!found) throw new Error(`Featured repo not found or not public: ${f.repo}`);
-    const [detail, langs] = await Promise.all([
-      client.rest(`/repos/${user}/${f.repo}`),
-      client.rest(`/repos/${user}/${f.repo}/languages`),
+    const owner = f.owner ?? user;
+    const own = owner.toLowerCase() === user.toLowerCase();
+    const label = own ? f.repo : `${owner}/${f.repo}`;
+    const notFound = () => new Error(`Featured repo not found or not public: ${label}`);
+
+    let detail, url;
+    if (own) {
+      const found = repos.find((r) => r.name === f.repo);
+      if (!found) throw notFound();
+      url = found.html_url;
+      detail = await client.rest(`/repos/${user}/${f.repo}`);
+    } else {
+      // Someone else's repo (a team or hackathon project): read it from its owner and require it to be public.
+      try {
+        detail = await client.rest(`/repos/${owner}/${f.repo}`);
+      } catch (e) {
+        if (e instanceof GitHubError && e.status === 404) throw notFound();
+        throw e;
+      }
+      if (detail.private) throw notFound();
+      url = detail.html_url;
+    }
+    const [langs, contributors] = await Promise.all([
+      client.rest(`/repos/${owner}/${f.repo}/languages`),
+      own ? null : client.rest(`/repos/${owner}/${f.repo}/contributors?per_page=100`),
     ]);
     featuredOut.push({
       ...f,
-      url: found.html_url,
+      url,
+      ownerLogin: detail.owner?.login ?? owner,
+      external: !own,
+      contributions: own ? null : shareOfCommits(contributors, user),
       fork: Boolean(detail.fork),
       parent: detail.parent?.full_name ?? null,
       languages: Object.entries(langs).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([n]) => n),
