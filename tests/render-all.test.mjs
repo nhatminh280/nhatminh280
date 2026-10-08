@@ -4,6 +4,7 @@ import { assertWellFormed } from './helpers/xml.mjs';
 import { config } from '../scripts/config.mjs';
 import { renderAll } from '../scripts/lib/render-all.mjs';
 import { esc } from '../scripts/lib/format.mjs';
+import { THEMES } from '../scripts/lib/theme.mjs';
 
 const data = {
   figures: { repos: 17, commits: 254, followers: 8, years: 4, activeDays: 112, languageCount: 9 },
@@ -45,4 +46,23 @@ test('no stack label or chip in the real config is truncated', () => {
     assert.ok(svg.includes(`>${esc(g.title)}</text>`), `stack label "${g.title}" was truncated`);
     for (const item of g.items) assert.ok(svg.includes(`>${esc(item)}</text>`), `chip "${item}" was truncated`);
   }
+});
+
+// Blue direction: every colour in the theme sits in the blue family, so no card drifts back to green or amber.
+const hue = (hex) => {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const max = Math.max(r, g, b), d = max - Math.min(r, g, b);
+  if (!d) return null;
+  const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  return (h * 60 + 360) % 360;
+};
+
+test('theme colours are all blue-family in both modes', () => {
+  for (const [mode, th] of Object.entries(THEMES)) {
+    for (const k of ['accent', 'accent2', 'accent3', 'cyan', 'bg', 'card', 'line', 'ink', 'muted']) {
+      const h = hue(th[k]);
+      assert.ok(h !== null && h >= 190 && h <= 260, `${mode}.${k} ${th[k]} has hue ${h}`);
+    }
+  }
+  assert.notEqual(new Set(['accent', 'accent2', 'accent3'].map((k) => THEMES.dark[k])).size, 1, 'three distinct blues');
 });

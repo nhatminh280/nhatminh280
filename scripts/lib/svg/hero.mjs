@@ -134,7 +134,7 @@ function ragArt(th) {
   // The map: three clusters of dots with a name each, drifting together as one camera.
   let map = '';
   CLUSTERS.forEach((cl, i) => {
-    map += clouds[i].map(([x, y]) => `<circle class="dot" cx="${f(x)}" cy="${f(y)}" r="2.6" fill="${th[cl.color]}" fill-opacity="0.5"/>`).join('');
+    map += clouds[i].map(([x, y]) => `<circle class="dot" cx="${f(x)}" cy="${f(y)}" r="2.6" fill="${th[cl.color]}" fill-opacity="0.78"/>`).join('');
     map += text(cl.c[0] - cl.r, f(cl.c[1] + cl.r + 18), cl.label, { size: 11, fill: th.muted, mono: true });
   });
   out += `<g class="pan">${map}</g>`;

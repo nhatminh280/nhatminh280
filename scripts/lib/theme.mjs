@@ -1,11 +1,12 @@
 export const SANS = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 export const MONO = "ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace";
 
-// accent / accent2 / accent3 are the three "signal" colours (x, y, z traces of the IMU motif).
+// Blue direction: every colour sits in the blue family. accent / accent2 / accent3 / cyan are four distinct blues
+// (royal, sky, periwinkle, ice) so clusters, icons and chips stay tellable apart without leaving the hue.
 // See docs/design-direction.md.
 export const THEMES = {
-  light: { bg: '#eef2f5', card: '#fbfcfd', ink: '#101c26', muted: '#566573', line: '#d3dde4', accent: '#2f55d4', accent2: '#1f9d6a', accent3: '#d99a00', glow: 0.2, cyan: '#06a6c9' },
-  dark:  { bg: '#0c141b', card: '#121d26', ink: '#e7eef4', muted: '#93a4b3', line: '#243442', accent: '#7b97ff', accent2: '#46c996', accent3: '#f0b429', glow: 0.34, cyan: '#22d3ee' },
+  light: { bg: '#eaf1ff', card: '#f8faff', ink: '#0b1a3a', muted: '#4a5f87', line: '#cddcf7', accent: '#2f5bea', accent2: '#0a8bd9', accent3: '#6a6df0', glow: 0.22, cyan: '#14b0d9' },
+  dark:  { bg: '#070f23', card: '#0b1730', ink: '#e6efff', muted: '#8fa6d0', line: '#1b2d52', accent: '#6f93ff', accent2: '#38b6ff', accent3: '#8f94ff', glow: 0.36, cyan: '#4fd0ee' },
 };
 
 const LANG_COLORS = {
