@@ -82,6 +82,7 @@ function css(th) {
     + `.ring{transform-box:fill-box;transform-origin:center;animation:ring 2.4s ease-out infinite}`
     + `.blink{animation:blink 1s steps(1) infinite}`
     + `.pulse{animation:pulse 2.6s ease-in-out infinite}`
+    + `.aur{animation:aur 24s ease-in-out infinite alternate;animation-delay:var(--d)}`
     + `.grid{animation:grid 40s linear infinite}`
     + `.stars{animation:stars 26s ease-in-out infinite alternate}`
     + `.pan{animation:pan 18s ease-in-out infinite alternate}`
@@ -93,18 +94,24 @@ function css(th) {
     + `@keyframes ring{0%{transform:scale(1);opacity:.7}100%{transform:scale(3.4);opacity:0}}`
     + `@keyframes blink{50%{opacity:0}}`
     + `@keyframes pulse{50%{opacity:.3}}`
+    + `@keyframes aur{from{transform:translate(0,0)}to{transform:translate(var(--x),var(--y))}}`
     + `@keyframes grid{to{transform:translate(-48px,-48px)}}`
     + `@keyframes stars{from{transform:translate(-8px,3px)}to{transform:translate(8px,-3px)}}`
     + `@keyframes pan{from{transform:translate(-3px,-2px)}to{transform:translate(3px,2px)}}`
-    + `@media (prefers-reduced-motion: reduce){.in,.draw,.brief,.tok,.scn,.ring,.blink,.pulse,.grid,.stars,.pan{animation:none}.scn-b{display:none}.scn-c{display:none}.brief{display:none}}`
+    + `@media (prefers-reduced-motion: reduce){.in,.draw,.brief,.tok,.scn,.ring,.blink,.pulse,.grid,.stars,.pan{animation:none}.aur{animation:none}.scn-b{display:none}.scn-c{display:none}.brief{display:none}}`
     + `</style>`;
 }
 
 // Quiet backdrop: coordinate grid (drifts one cell per loop) and a few far-off points (drift the other way).
 function backdrop(th) {
-  let g = `<defs><clipPath id="card"><rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="18"/></clipPath>`
+  const glow = (id, color) => `<radialGradient id="${id}"><stop offset="0" stop-color="${color}" stop-opacity="${th.glow}"/><stop offset="0.55" stop-color="${color}" stop-opacity="${f(th.glow * 0.35)}"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></radialGradient>`;
+  let g = `<defs>${glow('ga', th.accent)}${glow('gb', th.accent2)}${glow('gc', th.accent)}<clipPath id="card"><rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="18"/></clipPath>`
     + `<radialGradient id="halo"><stop offset="0" stop-color="${th.accent}" stop-opacity="0.28"/><stop offset="1" stop-color="${th.accent}" stop-opacity="0"/></radialGradient></defs>`;
-  g += `<g clip-path="url(#card)"><g class="grid" stroke="${th.line}" stroke-opacity="0.55" stroke-width="1">`;
+  g += `<g clip-path="url(#card)">`
+    + `<circle class="aur a1" cx="560" cy="110" r="280" fill="url(#ga)" style="--x:50px;--y:30px;--d:0s"/>`
+    + `<circle class="aur a2" cx="800" cy="340" r="250" fill="url(#gb)" style="--x:-60px;--y:-24px;--d:-9s"/>`
+    + `<circle class="aur a3" cx="170" cy="380" r="260" fill="url(#gc)" style="--x:40px;--y:-34px;--d:-15s"/>`
+    + `<g class="grid" stroke="${th.line}" stroke-opacity="0.55" stroke-width="1">`;
   for (let x = 0; x <= W + 48; x += 48) g += `<line x1="${x}" y1="-48" x2="${x}" y2="${H + 48}"/>`;
   for (let y = 0; y <= H + 48; y += 48) g += `<line x1="-48" y1="${y}" x2="${W + 48}" y2="${y}"/>`;
   g += `</g>`;
@@ -142,7 +149,7 @@ function ragArt(th) {
     // scene indicator: three pills, the current one lit
     SCENES.forEach((_, j) => { g += `<rect x="${X0 + j * 26}" y="372" width="${j === si ? 20 : 8}" height="4" rx="2" fill="${j === si ? th.accent : th.line}"/>`; });
     // 1. the question
-    g += `<g class="in" ${delay(s, 0.3)}><rect x="${X0}" y="40" width="${chipW}" height="30" rx="6" fill="${th.bg}" stroke="${th.line}"/>`
+    g += `<g class="in" ${delay(s, 0.3)}><rect x="${X0}" y="40" width="${chipW}" height="30" rx="6" fill="${th.bg}" fill-opacity="0.72" stroke="${th.line}"/>`
       + text(X0 + 14, 59, sc.query, { size: SIZE, fill: th.ink, mono: true }) + `</g>`;
 
     // 2. it lands in the map (map overlays share the camera drift)
@@ -159,7 +166,7 @@ function ragArt(th) {
 
     // 4. stages are narrated, then the answer streams out
     g += `<line class="draw" pathLength="1" ${delay(s, 2.9)} x1="688" y1="226" x2="${panel.x}" y2="226" stroke="${th.accent2}" stroke-width="1.5"/>`;
-    g += `<g class="in" ${delay(s, 3.0)}><rect x="${panel.x}" y="${panel.y}" width="${panel.w}" height="${panel.h}" rx="10" fill="${th.bg}" stroke="${th.line}"/></g>`;
+    g += `<g class="in" ${delay(s, 3.0)}><rect x="${panel.x}" y="${panel.y}" width="${panel.w}" height="${panel.h}" rx="10" fill="${th.bg}" fill-opacity="0.72" stroke="${th.line}"/></g>`;
     const sy = panel.y + 26, sx = panel.x + panel.pad;
     sc.stages.forEach((st, i) => {
       const last = i === sc.stages.length - 1;

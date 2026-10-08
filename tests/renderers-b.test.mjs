@@ -100,6 +100,19 @@ test('hero is a three-scene cinematic banner with layered CSS motion', () => {
   assert.ok(svg.includes('illustrative, not live inference'), 'honest caption');
 });
 
+test('hero has a soft blurred aurora behind the grid, and it holds still under reduced motion', () => {
+  for (const th of Object.values(THEMES)) {
+    const svg = heroSVG(hero, th);
+    assert.equal((svg.match(/class="aur /g) || []).length, 3, 'three drifting glows');
+    assert.equal((svg.match(/<radialGradient/g) || []).length, 4, 'three glows plus the cluster halo');
+    assert.ok(svg.indexOf('class="aur ') < svg.indexOf('class="grid"'), 'aurora sits behind the grid');
+    assert.doesNotMatch(svg, /<filter|feGaussianBlur/, 'gradients, not filters: cheap enough to animate');
+    assert.match(svg, /@media \(prefers-reduced-motion: reduce\)\{[^]*\.aur\{animation:none\}/);
+  }
+  const op = (th) => Number(heroSVG(hero, th).match(/stop-opacity="([0-9.]+)"/)[1]);
+  assert.ok(op(THEMES.dark) > op(THEMES.light), 'glow is stronger on dark, restrained on light');
+});
+
 test('the full focus line is shown, not cut with an ellipsis', () => {
   assert.ok(heroSVG(hero, THEMES.light).includes('LLM &amp; RAG, computer vision, ML on small devices'));
 });
