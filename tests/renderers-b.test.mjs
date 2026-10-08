@@ -86,28 +86,41 @@ test('hero renders name, role, status in both themes', () => {
   }
 });
 
-test('hero illustration is a two-scenario RAG flow with CSS animation', () => {
+test('hero is a three-scene cinematic banner with layered CSS motion', () => {
   const svg = heroSVG(hero, THEMES.light);
   assertWellFormed(svg);
+  assert.ok(svg.includes('height="400"'), 'taller banner');
   assert.ok(!svg.includes('<polyline'), 'the IMU traces are gone');
   assert.ok(svg.includes('@keyframes'), 'animated');
-  for (const c of ['scn-a', 'scn-b']) assert.ok(svg.includes(`class="scn ${c}"`), c);
-  assert.ok((svg.match(/class="dot"/g) || []).length >= 40, 'embedding cloud');
-  assert.equal((svg.match(/class="hit-line draw/g) || []).length, 8, 'four retrieved neighbours per scenario');
-  assert.ok(svg.includes('illustration of a RAG flow'), 'honest caption');
+  for (const c of ['scn-a', 'scn-b', 'scn-c']) assert.ok(svg.includes(`class="scn ${c}"`), c);
+  for (const layer of ['grid', 'stars', 'pan']) assert.ok(svg.includes(`class="${layer}`), `${layer} layer`);
+  assert.ok((svg.match(/class="dot"/g) || []).length >= 60, 'three embedding clusters');
+  assert.equal((svg.match(/class="hit-line draw/g) || []).length, 12, 'four retrieved neighbours per scene');
+  for (const l of ['products', 'articles', 'video frames']) assert.ok(svg.includes(`>${l}<`), `cluster label ${l}`);
+  assert.ok(svg.includes('illustrative, not live inference'), 'honest caption');
 });
 
-test('answer panel states how many chunks were retrieved, matching the lines drawn', () => {
+test('the full focus line is shown, not cut with an ellipsis', () => {
+  assert.ok(heroSVG(hero, THEMES.light).includes('LLM &amp; RAG, computer vision, ML on small devices'));
+});
+
+test('each scene narrates its stages before the answer streams', () => {
   const svg = heroSVG(hero, THEMES.light);
+  for (const w of ['retrieving', 'reranking', 'generating', 'embedding frames', 'classifying']) assert.ok(svg.includes(`>${w}<`), w);
   assert.equal((svg.match(/4 chunks retrieved/g) || []).length, 2);
+  assert.equal((svg.match(/4 nearest examples/g) || []).length, 1);
 });
 
-test('hero motion is inert: no script, no external reference, reduced motion falls back to scenario A', () => {
-  const svg = heroSVG(hero, THEMES.dark);
-  assert.doesNotMatch(svg, /<script|href=|url\(|@import/);
-  const rm = svg.match(/@media \(prefers-reduced-motion: reduce\)\{[^}]*\}[^}]*\}/)?.[0] ?? '';
+test('hero stays small and inert: size cap, no script, no external reference, reduced motion shows scene A only', () => {
+  for (const th of Object.values(THEMES)) {
+    const svg = heroSVG(hero, th);
+    assert.ok(svg.length < 40000, `hero is ${svg.length} bytes`);
+    assert.doesNotMatch(svg, /<script|href=|url\((?!#)|@import/);
+  }
+  const rm = heroSVG(hero, THEMES.dark).match(/@media \(prefers-reduced-motion: reduce\)\{.*?\}\}/)?.[0] ?? '';
   assert.match(rm, /animation:none/);
-  assert.match(rm, /\.scn-b\{display:none\}/);
+  for (const c of ['scn-b', 'scn-c']) assert.ok(rm.includes(`.${c}{display:none}`), c);
+  assert.ok(rm.includes('.brief{display:none}'), 'stage captions would overlap if all were shown');
 });
 
 test('flowTokens wraps a streamed answer inside the panel and caps the line count', () => {
