@@ -105,7 +105,7 @@ function css(th) {
 // Quiet backdrop: coordinate grid (drifts one cell per loop) and a few far-off points (drift the other way).
 function backdrop(th) {
   const glow = (id, color) => `<radialGradient id="${id}"><stop offset="0" stop-color="${color}" stop-opacity="${th.glow}"/><stop offset="0.55" stop-color="${color}" stop-opacity="${f(th.glow * 0.35)}"/><stop offset="1" stop-color="${color}" stop-opacity="0"/></radialGradient>`;
-  let g = `<defs>${glow('ga', th.accent)}${glow('gb', th.accent2)}${glow('gc', th.accent)}<clipPath id="card"><rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="18"/></clipPath>`
+  let g = `<defs>${glow('ga', th.accent)}${glow('gb', th.accent2)}${glow('gc', th.cyan)}<clipPath id="card"><rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="18"/></clipPath>`
     + `<radialGradient id="halo"><stop offset="0" stop-color="${th.accent}" stop-opacity="0.28"/><stop offset="1" stop-color="${th.accent}" stop-opacity="0"/></radialGradient></defs>`;
   g += `<g clip-path="url(#card)">`
     + `<circle class="aur a1" cx="560" cy="110" r="280" fill="url(#ga)" style="--x:50px;--y:30px;--d:0s"/>`

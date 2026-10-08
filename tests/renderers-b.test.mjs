@@ -113,6 +113,14 @@ test('hero has a soft blurred aurora behind the grid, and it holds still under r
   assert.ok(op(THEMES.dark) > op(THEMES.light), 'glow is stronger on dark, restrained on light');
 });
 
+test('the third glow is cyan in both themes', () => {
+  for (const th of Object.values(THEMES)) {
+    assert.ok(th.cyan, 'theme defines cyan');
+    const svg = heroSVG(hero, th);
+    assert.ok(svg.includes(`<radialGradient id="gc"><stop offset="0" stop-color="${th.cyan}"`), 'gc uses cyan');
+  }
+});
+
 test('the full focus line is shown, not cut with an ellipsis', () => {
   assert.ok(heroSVG(hero, THEMES.light).includes('LLM &amp; RAG, computer vision, ML on small devices'));
 });
