@@ -1,6 +1,6 @@
 import { fmt, textWidth, truncate } from '../format.mjs';
 import { svgDoc, text } from './frame.mjs';
-import { auroraDefs, auroraLayer, AURORA_CSS } from './aurora.mjs';
+import { auroraDefs, auroraLayer, AURORA_CSS, RISE_CSS } from './aurora.mjs';
 
 // One glass tile per figure over the same soft aurora as the hero. Each tile has a small hand-drawn icon in its own
 // signal colour. Tiles rise in once, staggered, then hold still. Every number is a real figure: nothing here is
@@ -32,8 +32,7 @@ export function activitySVG(figures, th) {
   const H = pad * 2 + rows * tileH + (rows - 1) * gap;
 
   let body = `<defs>${auroraDefs(th, 0.8)}<clipPath id="card"><rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="10"/></clipPath></defs>`
-    + `<style>${AURORA_CSS}.rise{animation:rise .6s ease-out both;animation-delay:calc(var(--i) * 0.08s)}`
-    + `@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}`
+    + `<style>${AURORA_CSS}${RISE_CSS}`
     + `@media (prefers-reduced-motion: reduce){.rise{animation:none}.aur{animation:none}}</style>`
     + `<rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="10" fill="${th.card}" stroke="${th.line}"/>`
     + `<g clip-path="url(#card)">`

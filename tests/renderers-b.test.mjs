@@ -21,6 +21,32 @@ test('stack renders groups and escapes ampersands', () => {
   }
 });
 
+test('stack is one glass row per group, each with an icon, and one chip per item, over the shared aurora', () => {
+  const real = [
+    { title: 'Languages', items: ['Python', 'C++'] }, { title: 'Machine learning', items: ['PyTorch', 'XGBoost'] },
+    { title: 'LLM and RAG', items: ['LangGraph', 'ChromaDB', 'Gemini'] }, { title: 'Computer vision', items: ['OpenCV'] },
+    { title: 'Embedded', items: ['ESP32', 'MPU6050'] }, { title: 'Something new', items: ['x'] },
+  ];
+  for (const th of Object.values(THEMES)) {
+    const svg = stackSVG(real, th);
+    assertWellFormed(svg);
+    assert.equal((svg.match(/class="row rise"/g) || []).length, 6);
+    assert.equal((svg.match(/class="ico"/g) || []).length, 6, 'every group has an icon, including one the icon set has never heard of');
+    assert.equal((svg.match(/class="chip"/g) || []).length, 11);
+    assert.equal((svg.match(/class="aur /g) || []).length, 3);
+    assert.doesNotMatch(svg, /<filter|feGaussianBlur|<script|href=|url\((?!#)/);
+    assert.ok(svg.length < 16000, `stack is ${svg.length} bytes`);
+    assert.match(svg, /@media \(prefers-reduced-motion: reduce\)\{[^]*\.rise\{animation:none\}/);
+    assert.match(svg, /\.rise\{animation:rise [0-9.]+s ease-out both;animation-delay:calc\(var\(--i\) \* [0-9.]+s\)\}/);
+  }
+});
+
+test('the real stack keeps every chip on one line per group where it fits', () => {
+  const llm = [{ title: 'LLM and RAG', items: ['LangGraph', 'ChromaDB', 'Gemini', 'Prompt engineering', 'Semantic search'] }];
+  const rows = (svg) => new Set([...svg.matchAll(/<rect class="chipbox" x="[\d.]+" y="([\d.]+)"/g)].map((m) => m[1])).size;
+  assert.equal(rows(stackSVG(llm, THEMES.light)), 1, 'the widest real group stays on one row');
+});
+
 test('stack labels keep their own casing (no forced ALL CAPS)', () => {
   assert.ok(stackSVG(groups, THEMES.light).includes('>Languages</text>'));
 });

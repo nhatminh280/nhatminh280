@@ -18,3 +18,7 @@ export function auroraLayer(blobs) {
 
 export const AURORA_CSS = '.aur{animation:aur 24s ease-in-out infinite alternate;animation-delay:var(--d)}'
   + '@keyframes aur{from{transform:translate(0,0)}to{transform:translate(var(--x),var(--y))}}';
+
+// One-shot staggered reveal: each element sets --i, the nth one starts n * 0.08 s after the first, then it holds still.
+export const RISE_CSS = '.rise{animation:rise .6s ease-out both;animation-delay:calc(var(--i) * 0.08s)}'
+  + '@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}';
