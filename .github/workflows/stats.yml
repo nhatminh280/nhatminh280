@@ -1,0 +1,64 @@
+name: profile assets
+
+# Regenerates the cards straight from the GitHub API and commits them back.
+# Nothing on the profile depends on a third-party stat service.
+
+on:
+  schedule:
+    # Every 30 minutes, offset off the hour: schedules landing on :00 queue behind
+    # the platform-wide rush and are the first GitHub drops under load.
+    - cron: '7,37 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - scripts/**
+      - .github/workflows/stats.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-assets
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
+      - name: Run tests
+        run: npm test
+
+      - name: Regenerate SVGs from the GitHub API
+        run: node scripts/build-assets.mjs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check whether the figures moved
+        id: diff
+        run: |
+          if git diff --quiet -- assets; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+          else
+            echo 'changed=true' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Bump the README's asset cache-buster
+        if: steps.diff.outputs.changed == 'true'
+        # Digits are allowed in the name so project-1-dark.svg is matched too.
+        run: sed -i -E "s#(assets/[a-z0-9-]+-(dark|light)\.svg)(\?v=[0-9]+)?#\1?v=$(date +%s)#g" README.md
+
+      - name: Commit and push
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets README.md
+          git commit -m 'chore: refresh profile stat assets'
+          git push
