@@ -4,7 +4,8 @@ import { assertWellFormed } from './helpers/xml.mjs';
 import { THEMES } from '../scripts/lib/theme.mjs';
 import { stackSVG } from '../scripts/lib/svg/stack.mjs';
 import { projectSVG } from '../scripts/lib/svg/project.mjs';
-import { heroSVG } from '../scripts/lib/svg/hero.mjs';
+import { heroSVG, flowTokens } from '../scripts/lib/svg/hero.mjs';
+import { textWidth } from '../scripts/lib/format.mjs';
 
 const groups = [
   { title: 'Languages', items: ['Python', 'C++'] },
@@ -85,10 +86,37 @@ test('hero renders name, role, status in both themes', () => {
   }
 });
 
-test('hero illustration is three IMU traces with a bracketed window', () => {
+test('hero illustration is a two-scenario RAG flow with CSS animation', () => {
   const svg = heroSVG(hero, THEMES.light);
-  assert.equal((svg.match(/<polyline/g) || []).length, 3);
-  assert.ok(svg.includes('stroke-dasharray'));
+  assertWellFormed(svg);
+  assert.ok(!svg.includes('<polyline'), 'the IMU traces are gone');
+  assert.ok(svg.includes('@keyframes'), 'animated');
+  for (const c of ['scn-a', 'scn-b']) assert.ok(svg.includes(`class="scn ${c}"`), c);
+  assert.ok((svg.match(/class="dot"/g) || []).length >= 40, 'embedding cloud');
+  assert.equal((svg.match(/class="hit-line draw/g) || []).length, 8, 'four retrieved neighbours per scenario');
+  assert.ok(svg.includes('illustration of a RAG flow'), 'honest caption');
+});
+
+test('answer panel states how many chunks were retrieved, matching the lines drawn', () => {
+  const svg = heroSVG(hero, THEMES.light);
+  assert.equal((svg.match(/4 chunks retrieved/g) || []).length, 2);
+});
+
+test('hero motion is inert: no script, no external reference, reduced motion falls back to scenario A', () => {
+  const svg = heroSVG(hero, THEMES.dark);
+  assert.doesNotMatch(svg, /<script|href=|url\(|@import/);
+  const rm = svg.match(/@media \(prefers-reduced-motion: reduce\)\{[^}]*\}[^}]*\}/)?.[0] ?? '';
+  assert.match(rm, /animation:none/);
+  assert.match(rm, /\.scn-b\{display:none\}/);
+});
+
+test('flowTokens wraps a streamed answer inside the panel and caps the line count', () => {
+  const t = flowTokens('Similar buyers picked a pour-over set and a grinder, both under budget.', 156, 12, 5);
+  assert.ok(t.length >= 10);
+  for (const k of t) assert.ok(k.x + textWidth(k.word, 12) <= 156 + 0.01, `${k.word} overflows`);
+  assert.ok(Math.max(...t.map((k) => k.line)) <= 4);
+  const long = flowTokens('word '.repeat(200), 156, 12, 5);
+  assert.ok(Math.max(...long.map((k) => k.line)) <= 4, 'overlong answers are cut, not overflowed');
 });
 
 test('hero is deterministic and copes with a very long name', () => {
